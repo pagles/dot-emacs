@@ -61,6 +61,7 @@
 
 (el-get-bundle flymake-python-pyflakes)
 
+(el-get-bundle virtualenvwrapper)
 
 ; cobalt color theme
 (when (string-match "apple-darwin" system-configuration)
@@ -85,3 +86,10 @@
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (setq flymake-python-pyflakes-executable "flake8")
 (setq flymake-python-pyflakes-extra-arguments '("--ignore=W293"))
+
+
+; virtualenvwrapper setup
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "~/.virtualenvs/")

@@ -34,6 +34,9 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
+(when (string-match "apple-darwin" system-configuration)
+  (setq mac-allow-anti-aliasing t))
+
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil 'noerror)
@@ -51,10 +54,8 @@
 
 ;; M-x jedi:install-server after running for the first time or after updates
 
-(el-get-bundle color-theme)
-
-(el-get-bundle color-theme-cobalt
-  :url "https://github.com/nickewing/color-theme-cobalt.git")
+(el-get-bundle cobalt2-theme
+  :url "https://github.com/chalmagean/cobalt2-emacs.git")
 
 (el-get-bundle highlight-indentation)
 
@@ -68,17 +69,10 @@
 
 (el-get-bundle ag)
 
-; cobalt color theme
-(when (string-match "apple-darwin" system-configuration)
-  (setq mac-allow-anti-aliasing t))
 
-(require 'color-theme)
-(color-theme-initialize)
-(load-file "~/.emacs.d/el-get/color-theme-cobalt/color-theme-cobalt.el")
-
-(if window-system
-  (color-theme-cobalt)
-)
+; cobalt theme 2
+(add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
+(load-theme 'cobalt2 t)
 
 
 ; show indentation in python mode

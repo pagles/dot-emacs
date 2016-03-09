@@ -2,6 +2,7 @@
 
 (push "/usr/local/bin" exec-path)
 (push "/usr/local/share/python" exec-path)
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
 (setq make-backup-files nil)
 (setq auto-save-default nil)
@@ -65,6 +66,8 @@
 
 (el-get-bundle magit)
 
+(el-get-bundle ag)
+
 ; cobalt color theme
 (when (string-match "apple-darwin" system-configuration)
   (setq mac-allow-anti-aliasing t))
@@ -99,3 +102,10 @@
 
 ; magit
 (global-set-key (kbd "C-x g") 'magit-status)
+
+
+; ag
+; this needs the silver searcher installed
+; brew install the_silver_searcher
+(require 'ag)
+(setq ag-highlight-search t)

@@ -63,6 +63,8 @@
 
 (el-get-bundle virtualenvwrapper)
 
+(el-get-bundle magit)
+
 ; cobalt color theme
 (when (string-match "apple-darwin" system-configuration)
   (setq mac-allow-anti-aliasing t))
@@ -93,3 +95,7 @@
 (venv-initialize-interactive-shells) ;; if you want interactive shell support
 (venv-initialize-eshell) ;; if you want eshell support
 (setq venv-location "~/.virtualenvs/")
+
+
+; magit
+(global-set-key (kbd "C-x g") 'magit-status)

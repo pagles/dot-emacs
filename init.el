@@ -50,6 +50,7 @@
 
 (el-get-bundle jedi
   (add-hook 'python-mode-hook 'jedi:setup)
+  (eval-when-compile (require 'jedi nil t))
   (setq jedi:complete-on-dot t))
 
 ;; M-x jedi:install-server after running for the first time or after updates
@@ -72,7 +73,8 @@
 
 ; cobalt theme 2
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
-(load-theme 'cobalt2 t)
+(if window-system
+    (load-theme 'cobalt2 t))
 
 
 ; show indentation in python mode

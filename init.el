@@ -62,6 +62,8 @@
 
 (el-get-bundle flymake-easy)
 
+(el-get-bundle flymake-cursor)
+
 (el-get-bundle flymake-python-pyflakes)
 
 (el-get-bundle virtualenvwrapper)
@@ -82,6 +84,10 @@
 (add-hook 'python-mode-hook 'highlight-indentation-mode)
 
 
+; show flymake errors in minibuf instead of popup
+(require 'flymake-cursor)
+
+
 ; flymake with flake8
 (require 'flymake-python-pyflakes)
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
@@ -94,6 +100,7 @@
 (venv-initialize-interactive-shells) ;; if you want interactive shell support
 (venv-initialize-eshell) ;; if you want eshell support
 (setq venv-location "~/.virtualenvs/")
+(setq-default mode-line-format (cons '(:exec venv-current-name) mode-line-format))
 
 
 ; magit

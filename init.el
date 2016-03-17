@@ -23,13 +23,9 @@
 
 (global-linum-mode 1)
 (define-key global-map (kbd "RET") 'newline-and-indent)
-(global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key (kbd "\C-x\C-b") 'ibuffer)
 
 (set-frame-font "Menlo-12")
-
-(require 'ido)
-(ido-mode t)
 
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
@@ -72,6 +68,17 @@
 
 (el-get-bundle ag)
 
+(el-get-bundle projectile)
+
+(el-get-bundle helm)
+
+(el-get-bundle helm-projectile)
+
+(el-get-bundle helm-ag)
+
+(el-get-bundle emacs-neotree
+    :url "https://github.com/jaypei/emacs-neotree.git")
+
 
 ; cobalt theme 2
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
@@ -112,3 +119,29 @@
 ; brew install the_silver_searcher
 (require 'ag)
 (setq ag-highlight-search t)
+
+
+; projectile
+(projectile-global-mode)
+
+
+; helm
+(require 'helm-config)
+(helm-mode 1)
+(global-set-key "\C-x\C-m" 'helm-M-x)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+
+; helm-projectile
+;; (setq helm-projectile-fuzzy-match nil)
+(require 'helm-projectile)
+(helm-projectile-on)
+
+
+; neotree
+(require 'neotree)
+(setq projectile-switch-project-action 'neotree-projectile-action)
+(global-set-key (kbd "C-x n") 'neotree-toggle)
+(global-set-key (kbd "C-x C-n") 'neotree-toggle)
+(setq neo-theme 'nerd)

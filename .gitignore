@@ -1,0 +1,16 @@
+# use glob syntax.
+syntax: glob
+
+*~
+*.DS_Store
+*.orig
+
+auto-save-list
+el-get
+elpa
+*.dat
+eshell
+tramp
+.python-environments
+ido.last
+projectile-bookmarks.eld

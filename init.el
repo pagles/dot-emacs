@@ -54,6 +54,8 @@
 (el-get-bundle cobalt2-theme
   :url "https://github.com/chalmagean/cobalt2-emacs.git")
 
+(el-get-bundle solarized-emacs)
+
 (el-get-bundle highlight-indentation)
 
 (el-get-bundle flymake-easy)

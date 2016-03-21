@@ -82,10 +82,10 @@
     :url "https://github.com/jaypei/emacs-neotree.git")
 
 
-; cobalt theme 2
+; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
 (if window-system
-    (load-theme 'cobalt2 t))
+    (load-theme 'solarized-light t))
 
 
 ; show indentation in python mode

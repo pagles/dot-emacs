@@ -47,7 +47,8 @@
 (el-get-bundle jedi
   (add-hook 'python-mode-hook 'jedi:setup)
   (eval-when-compile (require 'jedi nil t))
-  (setq jedi:complete-on-dot t))
+  (setq jedi:complete-on-dot t)
+  (define-key jedi-mode-map (kbd "C-.") 'jedi:complete))
 
 ;; M-x jedi:install-server after running for the first time or after updates
 
@@ -77,6 +78,10 @@
 (el-get-bundle helm-projectile)
 
 (el-get-bundle helm-ag)
+
+(el-get-bundle yasnippet)
+
+(el-get-bundle helm-c-yasnippet)
 
 (el-get-bundle emacs-neotree
     :url "https://github.com/jaypei/emacs-neotree.git")
@@ -147,3 +152,16 @@
 (global-set-key (kbd "C-x n") 'neotree-toggle)
 (global-set-key (kbd "C-x C-n") 'neotree-toggle)
 (setq neo-theme 'nerd)
+
+
+; yasnippert
+(require 'yasnippet)
+(require 'helm-c-yasnippet)
+(setq helm-yas-space-match-any-greedy t)
+(global-set-key (kbd "C-c y") 'helm-yas-complete)
+(yas-global-mode 1)
+
+
+; custom settings
+(custom-set-variables
+ '(safe-local-variable-values (quote ((Encoding . utf-8)))))

@@ -45,10 +45,13 @@
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 
 (el-get-bundle jedi
-  (add-hook 'python-mode-hook 'jedi:setup)
   (eval-when-compile (require 'jedi nil t))
   (setq jedi:complete-on-dot t)
-  (define-key jedi-mode-map (kbd "C-.") 'jedi:complete))
+  (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)
+  (eval-after-load 'jedi
+  '(progn
+     (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)))
+  (add-hook 'python-mode-hook 'jedi:setup))
 
 ;; M-x jedi:install-server after running for the first time or after updates
 

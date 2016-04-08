@@ -89,6 +89,7 @@
 (el-get-bundle emacs-neotree
     :url "https://github.com/jaypei/emacs-neotree.git")
 
+(el-get-bundle markdown-mode)
 
 ; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
@@ -141,6 +142,7 @@
 (global-set-key "\C-x\C-m" 'helm-M-x)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 
 
 ; helm-projectile
@@ -164,6 +166,10 @@
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
 (yas-global-mode 1)
 
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ; custom settings
 (custom-set-variables

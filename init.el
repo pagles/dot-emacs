@@ -91,6 +91,10 @@
 
 (el-get-bundle markdown-mode)
 
+(el-get-bundle dockerfile-mode)
+
+(el-get-bundle yaml-mode)
+
 ; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
 (if window-system
@@ -171,6 +175,16 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
+
 ; custom settings
 (custom-set-variables
  '(safe-local-variable-values (quote ((Encoding . utf-8)))))
+
+
+; yaml
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))

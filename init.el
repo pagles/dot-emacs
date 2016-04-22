@@ -87,13 +87,22 @@
 (el-get-bundle helm-c-yasnippet)
 
 (el-get-bundle emacs-neotree
-    :url "https://github.com/jaypei/emacs-neotree.git")
+  :url "https://github.com/jaypei/emacs-neotree.git")
 
 (el-get-bundle markdown-mode)
 
 (el-get-bundle dockerfile-mode)
 
 (el-get-bundle yaml-mode)
+
+(el-get-bundle xterm-color)
+
+(el-get-bundle multi-term
+  (autoload 'multi-term "multi-term" nil t)
+  (autoload 'multi-term-next "multi-term" nil t)
+  (setq multi-term-program "/bin/zsh")
+  (global-set-key (kbd "C-c t") 'multi-term-next)
+  (global-set-key (kbd "C-c T") 'multi-term))
 
 ; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
@@ -168,7 +177,7 @@
 (require 'helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
-(yas-global-mode 1)
+(add-hook 'prog-mode-hook 'yas-minor-mode)
 
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
@@ -180,11 +189,11 @@
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 
-; custom settings
-(custom-set-variables
- '(safe-local-variable-values (quote ((Encoding . utf-8)))))
-
-
 ; yaml
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+
+; custom settings
+(custom-set-variables
+ '(safe-local-variable-values (quote ((Encoding . utf-8)))))

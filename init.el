@@ -44,16 +44,8 @@
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 
-(el-get-bundle jedi
-  (eval-when-compile (require 'jedi nil t))
-  (setq jedi:complete-on-dot t)
-  (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)
-  (eval-after-load 'jedi
-  '(progn
-     (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)))
-  (add-hook 'python-mode-hook 'jedi:setup))
-
 ;; M-x jedi:install-server after running for the first time or after updates
+(el-get-bundle jedi)
 
 (el-get-bundle cobalt2-theme
   :url "https://github.com/chalmagean/cobalt2-emacs.git")
@@ -108,6 +100,14 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
 (if window-system
     (load-theme 'solarized-light t))
+
+
+; jedi
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+(eval-after-load 'jedi
+  '(progn
+     (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)))
 
 
 ; show indentation in python mode

@@ -130,7 +130,12 @@
 (use-package dired-sidebar :ensure t
   :bind ("C-c t" . dired-sidebar-toggle-sidebar)
   :custom
-  (dired-sidebar-should-follow-file t)   ; follow the current file and its project
+  ;; No idle timers: with one daemon serving several windows (one per worktree)
+  ;; they keep re-reading trees and hang Emacs. The tree opens on the current
+  ;; project when toggled, and global-auto-revert-mode refreshes it on changes.
+  (dired-sidebar-should-follow-file nil)
+  (dired-sidebar-refresh-on-special-commands nil)
+  (dired-sidebar-delay-auto-revert-updates nil)
   (dired-sidebar-theme 'ascii)           ; plain markers, safe in the terminal
   (dired-sidebar-width 35))
 

@@ -143,7 +143,9 @@
   (treemacs-follow-mode 1)               ; highlight the current file
   (treemacs-filewatch-mode 1)            ; refresh expanded folders on change
   (treemacs-git-mode 'deferred)          ; async git status (uses python3)
-  (treemacs-hide-gitignored-files-mode 1)) ; no .venv, caches, build output
+  (treemacs-hide-gitignored-files-mode 1) ; no .venv, caches, build output
+  ;; One click opens files and toggles folders (double-clicks are unreliable in a terminal).
+  (keymap-set treemacs-mode-map "<mouse-1>" #'treemacs-single-click-expand-action))
 
 ;;;; Drawer: current file's structure (right)
 (use-package imenu-list :ensure t

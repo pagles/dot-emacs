@@ -1,17 +1,7 @@
-# use glob syntax.
-syntax: glob
-
-*~
-*.DS_Store
-*.orig
-
-auto-save-list
-el-get
-elpa
-*.dat
-eshell
-tramp
-.python-environments
-ido.last
-projectile-bookmarks.eld
-url
+# Track only the config; everything else here is machine-local state
+# (packages, grammars, native-comp cache, history, custom.el).
+/*
+!/.gitignore
+!/README.md
+!/early-init.el
+!/init.el

@@ -1,199 +1,111 @@
-;; emacs configuration
+;;; init.el -*- lexical-binding: t; -*-
 
-(push "/usr/local/bin" exec-path)
-(push "/usr/local/share/python" exec-path)
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq use-package-always-defer t)
 
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq-default tab-width 4)
+;;;; Basics
+(setq custom-file (locate-user-emacs-file "custom.el")
+      make-backup-files nil
+      create-lockfiles nil
+      auto-save-default nil
+      ring-bell-function #'ignore
+      use-short-answers t)
+(load custom-file 'noerror)
 (setq-default indent-tabs-mode nil)
-(setq inhibit-startup-message t)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+(savehist-mode 1)
+(recentf-mode 1)
+(which-key-mode 1)
+(column-number-mode 1)
 
-(delete-selection-mode t)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(blink-cursor-mode t)
-(show-paren-mode t)
-(column-number-mode t)
-(set-fringe-style -1)
-(tooltip-mode -1)
+;; Agents edit files on disk; keep buffers in sync without prompts.
+(global-auto-revert-mode 1)
+(setq auto-revert-avoid-polling t
+      auto-revert-verbose nil
+      global-auto-revert-non-file-buffers t)
 
-(global-linum-mode 1)
-(define-key global-map (kbd "RET") 'newline-and-indent)
-(global-set-key (kbd "\C-x\C-b") 'ibuffer)
+;;;; Look
+(setq-default fill-column 120)                      ; same as ruff's line-length
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
-(set-frame-font "Menlo-12")
+;; GitHub Light colours applied to the built-in modus-operandi theme.
+(setq modus-operandi-palette-overrides
+      '((bg-main "#ffffff") (fg-main "#1f2328") (fg-dim "#59636e")
+        (keyword "#cf222e") (preprocessor "#cf222e")
+        (builtin "#0550ae") (constant "#0550ae")
+        (string "#0a3069") (docstring "#0a3069")
+        (fnname "#8250df") (type "#953800") (variable fg-main)
+        (comment "#59636e")
+        (bg-region "#ddf4ff") (fg-region unspecified)
+        (bg-hl-line "#f6f8fa") (fringe "#ffffff")
+        (fg-line-number-inactive "#8c959f") (bg-line-number-inactive "#ffffff")
+        (fg-line-number-active "#1f2328") (bg-line-number-active "#f6f8fa")
+        (bg-mode-line-active "#f6f8fa") (fg-mode-line-active "#1f2328")
+        (border-mode-line-active "#d0d7de")))
+(load-theme 'modus-operandi t)
+;; Thin line: no background (fills the whole cell in a terminal).
+(setq-default display-fill-column-indicator-character ?│)
+(set-face-attribute 'fill-column-indicator nil
+                    :foreground "#d0d7de" :background 'unspecified)
 
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
+;; Mouse clicks and scrolling in terminal frames.
+(xterm-mouse-mode 1)
 
-(when (string-match "apple-darwin" system-configuration)
-  (setq mac-allow-anti-aliasing t))
+;;;; Minibuffer completion
+(use-package vertico :ensure t :init (vertico-mode))
+(use-package marginalia :ensure t :init (marginalia-mode))
+(use-package orderless :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
 
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(use-package consult :ensure t
+  :bind (("C-x b" . consult-buffer)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ("M-g g" . consult-goto-line)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line))
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
+;;;; In-buffer completion
+(use-package corfu :ensure t
+  :init (global-corfu-mode)
+  :custom (corfu-auto t))
 
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+;;;; Tree-sitter (python-ts-mode etc.), prompts once per grammar
+(use-package treesit-auto :ensure t :demand t
+  :custom (treesit-auto-install 'prompt)
+  :config (global-treesit-auto-mode))
 
-;; M-x jedi:install-server after running for the first time or after updates
-(el-get-bundle jedi)
+;;;; Projects / worktrees
+(defun my/remember-worktrees ()
+  "Register every git checkout under ~/Workbench as a project."
+  (interactive)
+  (project-remember-projects-under (expand-file-name "~/Workbench")))
 
-(el-get-bundle cobalt2-theme
-  :url "https://github.com/chalmagean/cobalt2-emacs.git")
+;;;; LSP: ty
+(defun my/eglot-ty (&optional _interactive project)
+  "Run the ty from the project's .venv, falling back to ty on PATH."
+  (let* ((proj (or project (project-current)))
+         (root (if proj (project-root proj) default-directory))
+         (local (expand-file-name ".venv/bin/ty" root)))
+    (list (if (file-executable-p local) local "ty") "server")))
 
-(el-get-bundle solarized-emacs)
-
-(el-get-bundle highlight-indentation)
-
-(el-get-bundle flymake-easy)
-
-(el-get-bundle flymake-cursor)
-
-(el-get-bundle flymake-python-pyflakes)
-
-(el-get-bundle virtualenvwrapper)
-
-(el-get-bundle magit)
-
-(el-get-bundle ag)
-
-(el-get-bundle projectile)
-
-(el-get-bundle helm)
-
-(el-get-bundle helm-projectile)
-
-(el-get-bundle helm-ag)
-
-(el-get-bundle yasnippet)
-
-(el-get-bundle helm-c-yasnippet)
-
-(el-get-bundle emacs-neotree
-  :url "https://github.com/jaypei/emacs-neotree.git")
-
-(el-get-bundle markdown-mode)
-
-(el-get-bundle dockerfile-mode)
-
-(el-get-bundle yaml-mode)
-
-(el-get-bundle xterm-color)
-
-(el-get-bundle multi-term
-  (autoload 'multi-term "multi-term" nil t)
-  (autoload 'multi-term-next "multi-term" nil t)
-  (setq multi-term-program "/bin/zsh")
-  (global-set-key (kbd "C-c t") 'multi-term-next)
-  (global-set-key (kbd "C-c T") 'multi-term))
-
-; theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/el-get/cobalt2-theme")
-(if window-system
-    (load-theme 'solarized-light t))
-
-
-; jedi
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
-(eval-after-load 'jedi
-  '(progn
-     (define-key jedi-mode-map (kbd "C-.") 'jedi:complete)))
-
-
-; show indentation in python mode
-(require 'highlight-indentation)
-(add-hook 'python-mode-hook 'highlight-indentation-mode)
-
-
-; show flymake errors in minibuf instead of popup
-(require 'flymake-cursor)
-
-
-; flymake with flake8
-(require 'flymake-python-pyflakes)
-(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
-(setq flymake-python-pyflakes-executable "flake8")
-(setq flymake-python-pyflakes-extra-arguments '("--ignore=W293"))
-
-
-; virtualenvwrapper setup
-(require 'virtualenvwrapper)
-(venv-initialize-interactive-shells) ;; if you want interactive shell support
-(venv-initialize-eshell) ;; if you want eshell support
-(setq venv-location "~/.virtualenvs/")
-(setq-default mode-line-format (cons '(:exec venv-current-name) mode-line-format))
-
-
-; magit
-(global-set-key (kbd "C-x g") 'magit-status)
-
-
-; ag
-; this needs the silver searcher installed
-; brew install the_silver_searcher
-(require 'ag)
-(setq ag-highlight-search t)
-
-
-; projectile
-(projectile-global-mode)
-
-
-; helm
-(require 'helm-config)
-(helm-mode 1)
-(global-set-key "\C-x\C-m" 'helm-M-x)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-
-
-; helm-projectile
-;; (setq helm-projectile-fuzzy-match nil)
-(require 'helm-projectile)
-(helm-projectile-on)
-
-
-; neotree
-(require 'neotree)
-(setq projectile-switch-project-action 'neotree-projectile-action)
-(global-set-key (kbd "C-x n") 'neotree-toggle)
-(global-set-key (kbd "C-x C-n") 'neotree-toggle)
-(setq neo-theme 'nerd)
-
-
-; yasnippert
-(require 'yasnippet)
-(require 'helm-c-yasnippet)
-(setq helm-yas-space-match-any-greedy t)
-(global-set-key (kbd "C-c y") 'helm-yas-complete)
-(add-hook 'prog-mode-hook 'yas-minor-mode)
-
-(autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-
-(require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-
-
-; yaml
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-
-
-; custom settings
-(custom-set-variables
- '(safe-local-variable-values (quote ((Encoding . utf-8)))))
+(use-package eglot
+  :hook ((python-mode python-ts-mode) . eglot-ensure)
+  :bind (:map eglot-mode-map
+         ("C-c r" . eglot-rename)
+         ("C-c a" . eglot-code-actions)
+         ("C-c h" . eldoc-doc-buffer))
+  :custom
+  (eglot-autoshutdown t)                 ; stop ty when a worktree's last buffer closes
+  (eglot-extend-to-xref t)               ; keep site-packages files on the same server
+  (eglot-events-buffer-config '(:size 0 :format full)) ; no logging overhead
+  :config
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) . my/eglot-ty)))

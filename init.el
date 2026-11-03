@@ -121,6 +121,10 @@
   (markdown-hide-markup t)                   ; read like rendered text; toggle C-c C-x C-m
   (markdown-list-indent-width 2))
 
+;; Highlighting for ```mermaid blocks (and .mmd files).
+(use-package mermaid-mode :ensure t
+  :mode "\\.mmd\\'")
+
 ;;;; Projects / worktrees
 (defun my/remember-worktrees ()
   "Register every git checkout under ~/Workbench as a project."

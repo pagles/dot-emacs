@@ -53,6 +53,32 @@
 ;; Mouse clicks and scrolling in terminal frames.
 (xterm-mouse-mode 1)
 
+;; Terminal frames share the macOS clipboard via pbcopy/pbpaste, so kills
+;; (M-w, C-w, mouse selections) reach Cmd-V elsewhere and C-y pastes from it.
+;; GUI frames keep the built-in clipboard handling.
+(defun my/clipboard-cut (text)
+  (if (display-graphic-p)
+      (gui-select-text text)
+    (let ((process-environment (cons "LANG=en_US.UTF-8" process-environment))
+          (process-connection-type nil)
+          (coding-system-for-write 'utf-8))
+      (let ((proc (start-process "pbcopy" nil "pbcopy")))
+        (process-send-string proc text)
+        (process-send-eof proc)))))
+
+(defun my/clipboard-paste ()
+  (if (display-graphic-p)
+      (gui-selection-value)
+    (let* ((process-environment (cons "LANG=en_US.UTF-8" process-environment))
+           (coding-system-for-read 'utf-8)
+           (text (shell-command-to-string "pbpaste")))
+      (unless (or (string-empty-p text) (equal text (car kill-ring)))
+        text))))
+
+(setq interprogram-cut-function #'my/clipboard-cut
+      interprogram-paste-function #'my/clipboard-paste
+      mouse-drag-copy-region t)          ; selecting with the mouse copies, like iTerm
+
 ;;;; Minibuffer completion
 (use-package vertico :ensure t :init (vertico-mode))
 (use-package marginalia :ensure t :init (marginalia-mode))

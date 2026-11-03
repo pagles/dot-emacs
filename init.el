@@ -106,7 +106,20 @@
 ;;;; Tree-sitter (python-ts-mode etc.), prompts once per grammar
 (use-package treesit-auto :ensure t :demand t
   :custom (treesit-auto-install 'prompt)
-  :config (global-treesit-auto-mode))
+  :config
+  ;; Markdown goes to markdown-mode (gfm-mode) instead; see below.
+  (setq treesit-auto-langs (remq 'markdown treesit-auto-langs))
+  (global-treesit-auto-mode))
+
+;;;; Markdown (plan files, READMEs)
+(use-package markdown-mode :ensure t
+  :mode ("\\.md\\'" . gfm-mode)
+  :hook (markdown-mode . visual-line-mode)   ; soft-wrap long lines
+  :custom
+  (markdown-fontify-code-blocks-natively t)  ; code blocks in their language's colours
+  (markdown-header-scaling t)                ; bigger headings (GUI only)
+  (markdown-hide-markup t)                   ; read like rendered text; toggle C-c C-x C-m
+  (markdown-list-indent-width 2))
 
 ;;;; Projects / worktrees
 (defun my/remember-worktrees ()

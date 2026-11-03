@@ -54,7 +54,7 @@
 (xterm-mouse-mode 1)
 
 ;; Terminal frames share the macOS clipboard via pbcopy/pbpaste, so kills
-;; (M-w, C-w, mouse selections) reach Cmd-V elsewhere and C-y pastes from it.
+;; (M-w, C-w) reach Cmd-V elsewhere and C-y pastes from it.
 ;; GUI frames keep the built-in clipboard handling.
 (defun my/clipboard-cut (text)
   (if (display-graphic-p)
@@ -76,8 +76,7 @@
         text))))
 
 (setq interprogram-cut-function #'my/clipboard-cut
-      interprogram-paste-function #'my/clipboard-paste
-      mouse-drag-copy-region t)          ; selecting with the mouse copies, like iTerm
+      interprogram-paste-function #'my/clipboard-paste)
 
 ;;;; Minibuffer completion
 (use-package vertico :ensure t :init (vertico-mode))

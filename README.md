@@ -61,3 +61,13 @@ Run `M-x my/remember-worktrees` to register every checkout under `~/Workbench` a
 | `C-c C-o` | open link at point |
 | `C-c C-d` | toggle checkbox |
 | `M-↑` / `M-↓` | move list item or section |
+
+## Opening files in the running Emacs
+
+`macos/EmacsClient.applescript` builds a small app that opens files in the running Emacs server (the most recently used frame), so clicked `file://` links and Finder double-clicks land in your session:
+
+```sh
+osacompile -o ~/Applications/EmacsClient.app macos/EmacsClient.applescript
+```
+
+Then in Finder, Get Info on a `.md` file, set Open with to EmacsClient, and click Change All.

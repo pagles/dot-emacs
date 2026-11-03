@@ -125,14 +125,7 @@
 (use-package mermaid-mode :ensure t
   :mode "\\.mmd\\'")
 
-;;;; Drawers: file tree (left) and current file's structure (right)
-(use-package dired-sidebar :ensure t
-  :bind ("C-c t" . dired-sidebar-toggle-sidebar)
-  :custom
-  (dired-sidebar-should-follow-file t)   ; highlight the current file
-  (dired-sidebar-theme 'ascii)           ; plain markers, safe in the terminal
-  (dired-sidebar-width 35))
-
+;;;; Drawer: current file's structure (right)
 (use-package imenu-list :ensure t
   :bind ("C-c s" . imenu-list-smart-toggle)
   :custom

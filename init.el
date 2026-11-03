@@ -125,6 +125,22 @@
 (use-package mermaid-mode :ensure t
   :mode "\\.mmd\\'")
 
+;;;; Drawers: file tree (left) and current file's structure (right)
+(use-package dired-sidebar :ensure t
+  :bind ("C-c t" . dired-sidebar-toggle-sidebar)
+  :custom
+  (dired-sidebar-should-follow-file t)   ; highlight the current file
+  (dired-sidebar-theme 'ascii)           ; plain markers, safe in the terminal
+  (dired-sidebar-width 35))
+
+(use-package imenu-list :ensure t
+  :bind ("C-c s" . imenu-list-smart-toggle)
+  :custom
+  (imenu-list-position 'right)
+  (imenu-list-size 40)
+  (imenu-list-focus-after-activation nil) ; keep the cursor in the file
+  (imenu-list-auto-resize nil))
+
 ;;;; Projects / worktrees
 (defun my/remember-worktrees ()
   "Register every git checkout under ~/Workbench as a project."

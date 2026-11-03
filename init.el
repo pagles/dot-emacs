@@ -126,18 +126,26 @@
   :mode "\\.mmd\\'")
 
 ;;;; Drawer: file tree (left), shows whichever project the current file is in
-(use-package dired-subtree :ensure t)    ; in-place folder expansion; dired-sidebar needs it
-(use-package dired-sidebar :ensure t
-  :bind ("C-c t" . dired-sidebar-toggle-sidebar)
+(defun my/treemacs-toggle ()
+  "Close the tree if it's showing, otherwise open it on the current project."
+  (interactive)
+  (require 'treemacs)
+  (if (eq (treemacs-current-visibility) 'visible)
+      (delete-window (treemacs-get-local-window))
+    (treemacs-display-current-project-exclusively)))
+
+(use-package treemacs :ensure t
+  :init (keymap-global-set "C-c t" #'my/treemacs-toggle)
   :custom
-  ;; No idle timers: with one daemon serving several windows (one per worktree)
-  ;; they keep re-reading trees and hang Emacs. The tree opens on the current
-  ;; project when toggled, and global-auto-revert-mode refreshes it on changes.
-  (dired-sidebar-should-follow-file nil)
-  (dired-sidebar-refresh-on-special-commands nil)
-  (dired-sidebar-delay-auto-revert-updates nil)
-  (dired-sidebar-theme 'ascii)           ; plain markers, safe in the terminal
-  (dired-sidebar-width 35))
+  (treemacs-width 35)
+  :config
+  (treemacs-project-follow-mode 1)       ; switch tree when you switch worktree
+  (treemacs-follow-mode 1)               ; highlight the current file
+  (treemacs-filewatch-mode 1)            ; refresh expanded folders on change
+  (treemacs-git-mode 'deferred)          ; async git status (uses python3)
+  (treemacs-hide-gitignored-files-mode 1) ; no .venv, caches, build output
+  ;; One click opens files and toggles folders (double-clicks are unreliable in a terminal).
+  (keymap-set treemacs-mode-map "<mouse-1>" #'treemacs-single-click-expand-action))
 
 ;;;; Drawer: current file's structure (right)
 (use-package imenu-list :ensure t

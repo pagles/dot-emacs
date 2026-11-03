@@ -45,7 +45,7 @@ Code navigation uses [ty](https://github.com/astral-sh/ty) through eglot. Each p
 | `M-s r` | ripgrep in project |
 | `C-x p f` / `C-x p p` | find file / switch project |
 | `C-c r` / `C-c a` / `C-c h` | rename / code actions / docs |
-| `C-c t` | file tree drawer (left), follows the current project; `TAB` expands a folder |
+| `C-c t` | file tree drawer (left), follows the current project and file; click to open |
 | `C-c s` | structure of current file (right) |
 
 Run `M-x my/remember-worktrees` to register every checkout under `~/Workbench` as a project, and `M-x project-forget-zombie-projects` to drop deleted ones.

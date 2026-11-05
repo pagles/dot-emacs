@@ -121,6 +121,11 @@
   (markdown-hide-markup t)                   ; read like rendered text; toggle C-c C-x C-m
   (markdown-list-indent-width 2))
 
+;; Tables aligned on screen by visible width; the file is left as is.
+(add-to-list 'load-path (locate-user-emacs-file "lisp"))
+(autoload 'my/md-tables-mode "my-markdown-tables" nil t)
+(add-hook 'markdown-mode-hook #'my/md-tables-mode)
+
 ;; Highlighting for ```mermaid blocks (and .mmd files).
 (use-package mermaid-mode :ensure t
   :mode "\\.mmd\\'")

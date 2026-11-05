@@ -52,7 +52,7 @@ Run `M-x my/remember-worktrees` to register every checkout under `~/Workbench` a
 
 ## Markdown
 
-`.md` files open in `gfm-mode` (GitHub-flavoured Markdown) with soft wrapping, markup hidden, and code blocks highlighted in their own language.
+`.md` files open in `gfm-mode` (GitHub-flavoured Markdown) with soft wrapping, markup hidden, and code blocks highlighted in their own language. Tables are aligned on screen with box borders, without touching the file; showing the markup shows the raw tables.
 
 | Key | Action |
 | --- | --- |

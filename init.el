@@ -109,6 +109,9 @@
   :config
   ;; Markdown goes to markdown-mode (gfm-mode) instead; see below.
   (setq treesit-auto-langs (remq 'markdown treesit-auto-langs))
+  ;; rust-ts-mode is built in but has no rust-mode to remap from, so map .rs
+  ;; to it directly; otherwise Rust files open in fundamental-mode.
+  (treesit-auto-add-to-auto-mode-alist '(rust))
   (global-treesit-auto-mode))
 
 ;;;; Markdown (plan files, READMEs)
@@ -175,15 +178,21 @@
          (local (expand-file-name ".venv/bin/ty" root)))
     (list (if (file-executable-p local) local "ty") "server")))
 
+;;;; LSP: rust-analyzer (eglot's default for rust-ts-mode)
+;; `rustup component add rust-analyzer' puts it behind the rustup proxy on PATH.
+(add-hook 'rust-ts-mode-hook
+          (lambda () (setq-local fill-column 100)))  ; rustfmt's max_width
+
 (use-package eglot
-  :hook ((python-mode python-ts-mode) . eglot-ensure)
+  :hook (((python-mode python-ts-mode) . eglot-ensure)
+         (rust-ts-mode . eglot-ensure))
   :bind (:map eglot-mode-map
          ("C-c r" . eglot-rename)
          ("C-c a" . eglot-code-actions)
          ("C-c h" . eldoc-doc-buffer))
   :custom
-  (eglot-autoshutdown t)                 ; stop ty when a worktree's last buffer closes
-  (eglot-extend-to-xref t)               ; keep site-packages files on the same server
+  (eglot-autoshutdown t)                 ; stop the server when a worktree's last buffer closes
+  (eglot-extend-to-xref t)               ; keep site-packages / cargo registry files on the same server
   (eglot-events-buffer-config '(:size 0 :format full)) ; no logging overhead
   :config
   (add-to-list 'eglot-server-programs

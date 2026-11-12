@@ -1,6 +1,6 @@
 # dot-emacs
 
-Emacs 31 configuration for macOS, built for Python work across many git worktrees.
+Emacs 31 configuration for macOS, built for Python and Rust work across many git worktrees.
 
 ## Install
 
@@ -47,6 +47,12 @@ Code navigation uses [ty](https://github.com/astral-sh/ty) through eglot. Each p
 | `C-c r` / `C-c a` / `C-c h` | rename / code actions / docs |
 | `C-c t` | file tree drawer (left), follows the current project and file; click to open |
 | `C-c s` | structure of current file (right) |
+
+## Rust
+
+`.rs` files open in `rust-ts-mode` with [rust-analyzer](https://rust-analyzer.github.io) through eglot (`rustup component add rust-analyzer`). The keys above work the same way; the fill column indicator sits at 100, rustfmt's default width.
+
+## Projects
 
 Run `M-x my/remember-worktrees` to register every checkout under `~/Workbench` as a project, and `M-x project-forget-zombie-projects` to drop deleted ones.
 

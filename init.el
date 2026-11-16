@@ -101,7 +101,10 @@
 ;;;; In-buffer completion
 (use-package corfu :ensure t
   :init (global-corfu-mode)
-  :custom (corfu-auto t))
+  :custom
+  (corfu-auto t)
+  ;; Not in prose (Markdown, org, plain text all derive from text-mode).
+  (global-corfu-modes '((not text-mode) t)))
 
 ;;;; Tree-sitter (python-ts-mode etc.), prompts once per grammar
 (use-package treesit-auto :ensure t :demand t

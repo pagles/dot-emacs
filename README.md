@@ -56,6 +56,12 @@ Code navigation uses [ty](https://github.com/astral-sh/ty) through eglot. Each p
 
 Run `M-x my/remember-worktrees` to register every checkout under `~/Workbench` as a project, and `M-x project-forget-zombie-projects` to drop deleted ones.
 
+## Worktree frames
+
+Each `emacs` frame belongs to the git checkout you started it in and is named after it. [beframe](https://protesilaos.com/emacs/beframe) keeps buffer lists per frame, so `C-x b` only offers that frame's buffers. Files already open from the checkout join a new frame, and closing a frame kills the unmodified file buffers no other frame uses.
+
+Agents send files with `emacsclient -e '(my/visit "/abs/path")'`, which opens them in their checkout's frame. Without one, the file loads in the background and shows up when you start `emacs` in that checkout.
+
 ## Markdown
 
 `.md` files open in `gfm-mode` (GitHub-flavoured Markdown) with soft wrapping, markup hidden, and code blocks highlighted in their own language. Tables are aligned on screen with box borders, without touching the file; showing the markup shows the raw tables.

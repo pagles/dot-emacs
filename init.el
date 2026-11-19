@@ -168,6 +168,13 @@
   (imenu-list-auto-resize nil))
 
 ;;;; Projects / worktrees
+;; One frame per worktree: C-x b shows that frame's buffers only.
+(use-package beframe :ensure t :demand t
+  :init (setq beframe-rename-function #'my/worktree-frame-setup)
+  :config
+  (require 'my-worktree-frames)
+  (beframe-mode 1))
+
 (defun my/remember-worktrees ()
   "Register every git checkout under ~/Workbench as a project."
   (interactive)
